@@ -15,7 +15,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Install dependencies
-      run: sudo apt-get update && sudo apt-get -y install nasm libfdk-aac-dev libva-dev
+      run: sudo apt-get update && sudo apt-get -y install nasm libfdk-aac-dev libdrm-dev libva-dev
       
     - name: Configure library
       run: |
@@ -44,6 +44,7 @@ jobs:
         --enable-parser=h264,hevc,mpeg2video,vc1,vvc,vp8,vp9,av1,aac,ac3,dca,eac3,flac,mp3,opus,truehd,vorbis \
         --disable-decoder=libdav1d \
         --enable-libfdk-aac \
+        --enable-libdrm \
         --enable-vaapi \
         --disable-iconv \
         --disable-zlib \
