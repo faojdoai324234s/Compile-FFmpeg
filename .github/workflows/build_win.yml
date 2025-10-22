@@ -1,0 +1,96 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: msys2/setup-msys2@v2
+      with:
+        install: >-
+          make
+          yasm
+        path-type: inherit
+        update: true
+
+    - name: Install Visual Studio platform toolset v141
+      shell: cmd
+      run: |
+        "%ProgramFiles(x86)%\Microsoft Visual Studio\Installer\setup.exe" modify --quiet --norestart --includeRecommended --installPath "C:\Program Files\Microsoft Visual Studio\2022\Enterprise" --channelId VisualStudio.15.Release --add Microsoft.VisualStudio.Component.VC.v141.x86.x64
+          
+    - name: Setup MSYS2
+      shell: msys2 {0}
+      run: mv /usr/bin/link.exe /usr/bin/link.exe.bak
+        
+    - name: Clone FFmpeg
+      shell: cmd
+      run: |
+        mkdir upload
+        git clone https://github.com/FFmpeg/FFmpeg.git
+        cd FFmpeg
+        git checkout release/8.0
+        copy /y /v ${{github.workspace}}\hwcontext_dxva2.c ${{github.workspace}}\FFmpeg\libavutil
+
+    - uses: ilammy/msvc-dev-cmd@v1
+      with:
+        toolset: 14.16
+    - name: Configure library
+      working-directory: ${{github.workspace}}/FFmpeg
+      shell: msys2 {0}
+      env:
+        UPLOAD_FOLDER: ${{github.workspace}}\upload
+      run: |
+        CC=cl
+        ./configure \
+        --arch=x86_64 \
+        --target-os=win64 \
+        --toolchain=msvc \
+        --prefix=$UPLOAD_FOLDER \
+        --enable-gpl \
+        --enable-static \
+        --disable-shared \
+        --disable-all \
+        --disable-everything \
+        --disable-doc \
+        --enable-avcodec \
+        --enable-avformat \
+        --enable-swresample \
+        --enable-w32threads \
+        --enable-error-resilience \
+        --enable-decoder=h264,hevc,mpeg2video,vc1,vvc,vp8,vp9,av1,aac,ac3,dca,eac3,flac,mp3,opus,truehd,vorbis \
+        --enable-demuxer=h264,hevc,mpeg2video,vc1,vvc,vp8,vp9,av1,aac,ac3,dca,eac3,flac,mp3,opus,truehd,vorbis \
+        --enable-parser=h264,hevc,mpeg2video,vc1,vvc,vp8,vp9,av1,aac,ac3,dca,eac3,flac,mp3,opus,truehd,vorbis \
+        --disable-decoder=libdav1d \
+        --enable-d3d11va \
+        --enable-d3d12va \
+        --enable-dxva2 \
+        --disable-iconv \
+        --disable-schannel \
+        --disable-zlib
+
+    - name: Build library
+      working-directory: ${{github.workspace}}/FFmpeg
+      shell: msys2 {0}
+      run: make
+
+    - name: Install library
+      working-directory: ${{github.workspace}}/FFmpeg
+      shell: msys2 {0}
+      run: make install
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows-artifact
+        path: ${{github.workspace}}/upload
+        if-no-files-found: ignore
+        retention-days: 0
