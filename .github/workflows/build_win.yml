@@ -26,8 +26,8 @@ jobs:
         $ProgressPreference = 'SilentlyContinue'
         $ffmpeg_file = "C:\FFmpeg.zip"
         $ffmpeg_new_file = "C:\FFmpeg.8.0.zip"
-        Invoke-WebRequest -Uri download https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/master.zip -OutFile $ffmpeg_file
-        Invoke-WebRequest -Uri download https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/release/8.0-mpv.zip -OutFile $ffmpeg_new_file
+        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/master.zip -OutFile $ffmpeg_file
+        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/release/8.0-mpv.zip -OutFile $ffmpeg_new_file
 
     - name: Get FFmpeg hash
       shell: cmd
