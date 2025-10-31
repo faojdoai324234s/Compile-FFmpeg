@@ -24,18 +24,18 @@ jobs:
         [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
         
         $ProgressPreference = 'SilentlyContinue'
-        $ffmpeg_file = "C:\FFmpeg.zip"
-        $ffmpeg_new_file = "C:\FFmpeg.8.0.zip"
-        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/master.zip -OutFile $ffmpeg_file
-        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/release/8.0-mpv.zip -OutFile $ffmpeg_new_file
+        $ffmpeg_file = "C:\FFmpeg.tar.gz"
+        $ffmpeg_new_file = "C:\FFmpeg.8.0.tar.gz"
+        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/master.tar.gz -OutFile $ffmpeg_file
+        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/release/8.0-mpv.tar.gz -OutFile $ffmpeg_new_file
 
     - name: Get FFmpeg hash
       shell: cmd
       run: |
         echo "FFmpeg hash:"
-        vcpkg hash C:\FFmpeg.zip
+        vcpkg hash C:\FFmpeg.tar.gz
         echo "FFmpeg 8.0 hash:"
-        vcpkg hash C:\FFmpeg.8.0.zip
+        vcpkg hash C:\FFmpeg.8.0.tar.gz
         
     - name: Install FFmpeg
       shell: cmd
