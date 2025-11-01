@@ -24,7 +24,8 @@ jobs:
         cd vcpkg
         copy /y /v ${{github.workspace}}\${{ env.triplet }}.cmake triplets
         copy /y /v ${{github.workspace}}\portfile.cmake ports\ffmpeg
-        vcpkg install ffmpeg[ffmpeg,ffplay,gpl]:${{ env.triplet }}@8.0
+        copy /y /v ${{github.workspace}}\vcpkg.json ports\ffmpeg
+        vcpkg install ffmpeg[ffmpeg,ffplay,gpl]:${{ env.triplet }}
       
     - name: Upload artifact
       uses: actions/upload-artifact@v4
