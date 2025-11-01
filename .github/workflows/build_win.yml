@@ -25,6 +25,7 @@ jobs:
         copy /y /v ${{github.workspace}}\${{ env.triplet }}.cmake triplets
         copy /y /v ${{github.workspace}}\portfile.cmake ports\ffmpeg
         copy /y /v ${{github.workspace}}\vcpkg.json ports\ffmpeg
+        del /f ${{github.workspace}}\vcpkg.json
         vcpkg install ffmpeg[ffmpeg,ffplay,gpl]:${{ env.triplet }}
       
     - name: Upload artifact
