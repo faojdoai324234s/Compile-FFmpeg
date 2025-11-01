@@ -2,7 +2,7 @@ vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO faojdoai324234s/FFmpeg
     REF "release/${VERSION}-mpv"
-    SHA512 cad3d45a3465bafb01950c89c08c652d642f0fc3a0bc55f8948251b3be57348724f682d1dccff467fca7ff51fe76f86ee505e6a8e188b71725888c034c64f213
+    SHA512 f4aa34b52dd1e58684ce9a5ca4060aecb9836eaa848e762866e075fce1c9c36d99878b1d9c27b6017a752b87810669b796742dc58f136686bfef21094774a0aa
     HEAD_REF master
     PATCHES
         0001-create-lib-libraries.patch
