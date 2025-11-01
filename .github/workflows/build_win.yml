@@ -16,35 +16,15 @@ jobs:
     runs-on: windows-2022
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Download FFmpeg
-      shell: pwsh
-      run: |
-        $AllProtocols = [System.Net.SecurityProtocolType]'Tls,Tls11,Tls12'
-        [System.Net.ServicePointManager]::SecurityProtocol = $AllProtocols
-        
-        $ProgressPreference = 'SilentlyContinue'
-        $ffmpeg_file = "C:\FFmpeg.tar.gz"
-        $ffmpeg_new_file = "C:\FFmpeg.8.0.tar.gz"
-        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/master.tar.gz -OutFile $ffmpeg_file
-        Invoke-WebRequest -Uri https://github.com/faojdoai324234s/FFmpeg/archive/refs/heads/release/8.0-mpv.tar.gz -OutFile $ffmpeg_new_file
-
-    - name: Get FFmpeg hash
-      shell: cmd
-      run: |
-        echo "FFmpeg hash:"
-        vcpkg hash C:\FFmpeg.tar.gz
-        echo "FFmpeg 8.0 hash:"
-        vcpkg hash C:\FFmpeg.8.0.tar.gz
-        
+    - uses: actions/checkout@v4        
     - name: Install FFmpeg
       shell: cmd
       run: |
-        agit clone https://github.com/microsoft/vcpkg
+        git clone https://github.com/microsoft/vcpkg
         cd vcpkg
         copy /y /v ${{github.workspace}}\${{ env.triplet }}.cmake triplets
         copy /y /v ${{github.workspace}}\portfile.cmake ports\ffmpeg
-        vcpkg install ffmpeg[avcodec,avformat,fdk-aac,nonfree,swresample]:${{ env.triplet }}
+        vcpkg install ffmpeg[ffmpeg,ffplay,gpl]:${{ env.triplet }}
       
     - name: Upload artifact
       uses: actions/upload-artifact@v4
