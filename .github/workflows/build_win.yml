@@ -1,0 +1,37 @@
+name: Windows Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+env:
+  triplet: x64-windows-custom
+        
+jobs:
+  build:
+    runs-on: windows-2022
+
+    steps:
+    - uses: actions/checkout@v4        
+    - name: Install FFmpeg
+      shell: cmd
+      run: |
+        git clone https://github.com/microsoft/vcpkg
+        cd vcpkg
+        copy /y /v ${{github.workspace}}\${{ env.triplet }}.cmake triplets
+        copy /y /v ${{github.workspace}}\portfile.cmake ports\ffmpeg
+        copy /y /v ${{github.workspace}}\vcpkg.json ports\ffmpeg
+        del /f ${{github.workspace}}\vcpkg.json
+        vcpkg install ffmpeg[ffmpeg,ffplay,gpl]:${{ env.triplet }}
+      
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Windows-artifact
+        path: ${{github.workspace}}/vcpkg/installed/${{ env.triplet }}
+        if-no-files-found: ignore
+        retention-days: 0
