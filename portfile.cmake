@@ -1,7 +1,7 @@
 vcpkg_from_github(
     OUT_SOURCE_PATH SOURCE_PATH
     REPO faojdoai324234s/FFmpeg
-    REF "n${VERSION}"
+    REF "release/${VERSION}-mpv"
     SHA512 cad3d45a3465bafb01950c89c08c652d642f0fc3a0bc55f8948251b3be57348724f682d1dccff467fca7ff51fe76f86ee505e6a8e188b71725888c034c64f213
     HEAD_REF master
     PATCHES
